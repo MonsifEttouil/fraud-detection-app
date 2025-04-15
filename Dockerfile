@@ -1,19 +1,11 @@
-# Utiliser une image officielle Python
-FROM python:3.9-slim
+FROM python:3.9
 
-# Installer les dépendances
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
 
-# Copier tous les fichiers du projet
-COPY . .
+COPY app/ /app/
 
-# Créer la base de données
-RUN python -c "import sqlite3; conn = sqlite3.connect('predictions.db'); conn.close()"
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Exposer le port Flask
-EXPOSE 5000
+EXPOSE 8501
 
-# Lancer l'API Flask
-CMD ["python", "app.py"]
+CMD ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
